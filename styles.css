@@ -1,0 +1,51 @@
+#cropOverlay {
+  border: 2px dashed #3498db;
+  position: absolute;
+  cursor: move;
+  pointer-events: all;
+}
+
+.resizer {
+  width: 12px;
+  height: 12px;
+  background: white;
+  border: 2px solid #3498db;
+  position: absolute;
+  pointer-events: all;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+.resizer:hover {
+  transform: scale(1.2);
+  background: #3498db;
+}
+
+.resizer.top-left {
+  top: -6px;
+  left: -6px;
+  cursor: nw-resize;
+}
+
+.resizer.top-right {
+  top: -6px;
+  right: -6px;
+  cursor: ne-resize;
+}
+
+.resizer.bottom-left {
+  bottom: -6px;
+  left: -6px;
+  cursor: sw-resize;
+}
+
+.resizer.bottom-right {
+  bottom: -6px;
+  right: -6px;
+  cursor: se-resize;
+}
+
+#pdfCanvas {
+  min-height: 500px;
+  background: #f8fafc;
+}

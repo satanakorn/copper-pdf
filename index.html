@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Cropper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="styles.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    </script>
+  </head>
+  <body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-600 to-blue-800 shadow-lg">
+      <div class="container mx-auto px-4 py-6">
+        <h1 class="text-white text-3xl font-bold text-center">PDF Cropper</h1>
+        <p class="text-blue-100 text-center mt-2">
+          Simple and efficient PDF cropping tool
+        </p>
+      </div>
+    </header>
+
+    <main class="container mx-auto mt-8 p-4 flex-grow">
+      <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+          <label class="block text-lg font-medium text-gray-700 mb-2" for="pdfFile">
+            Upload a PDF File
+          </label>
+          <div class="flex items-center justify-center w-full">
+            <label class="flex flex-col w-full h-32 border-4 border-dashed border-blue-200 hover:border-blue-300 rounded-lg cursor-pointer transition-colors">
+              <div class="flex flex-col items-center justify-center pt-7">
+                <svg class="w-12 h-12 text-gray-400 group-hover:text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+                </svg>
+                <p class="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
+                  Select PDF file
+                </p>
+              </div>
+              <input class="opacity-0" id="pdfFile" type="file" accept="application/pdf">
+            </label>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <div class="relative border border-gray-200 rounded-lg bg-gray-50" id="pdfContainer">
+            <canvas class="w-full h-full rounded-lg" id="pdfCanvas"></canvas>
+            <div class="absolute border-2 border-blue-500 bg-blue-300 opacity-50 hidden rounded" id="cropOverlay">
+              <!-- Resizable Handles -->
+              <div class="resizer top-left"></div>
+              <div class="resizer top-right"></div>
+              <div class="resizer bottom-left"></div>
+              <div class="resizer bottom-right"></div>
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-4 mt-6 justify-center">
+            <button class="px-6 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg shadow hover:from-green-600 hover:to-green-700 transition-colors font-medium flex items-center justify-center" id="cropButton">
+              <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z"></path>
+              </svg>
+              Crop PDF
+            </button>
+            <button class="px-6 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg shadow hover:from-red-600 hover:to-red-700 transition-colors font-medium flex items-center justify-center" id="resetButton">
+              <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
+              </svg>
+              Reset
+            </button>
+          </div>
+
+          <div class="mt-6 text-gray-600 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center" id="cropData"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-gray-800 mt-12">
+      <div class="container mx-auto px-4 py-6">
+        <div class="flex flex-col items-center justify-center">
+          <p class="text-gray-300 text-center">
+            Made with ❤️ by
+            <span class="font-semibold text-blue-400">Sathanakon</span>
+          </p>
+          <p class="text-gray-500 text-sm mt-2">
+            © 2024 PDF Cropper. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
