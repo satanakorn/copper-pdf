@@ -2,7 +2,6 @@
 
 A modern, user-friendly web application for cropping PDF documents. Built with vanilla JavaScript and modern web technologies, this tool allows users to visually select and crop portions of PDF files with precision.
 
-![PDF Cropper Interface](placeholder-image.jpg)
 
 ## Features
 
